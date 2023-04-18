@@ -46,8 +46,8 @@ const Main = () => {
 } */}
           <Box
             sx={{
-              height: 300,
-              width: 300,
+              height: 100,
+              width: 100,
               backgroundImage:
                 "linear-gradient(120deg, #e0c3fd 0%, #8ed5fc 100%)",
               borderRadius: "50%",
