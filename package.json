@@ -15,6 +15,7 @@
     "@types/node": "18.15.10",
     "@types/react": "18.0.29",
     "@types/react-dom": "18.0.11",
+    "cohere-js": "^1.0.25",
     "dompurify": "^3.0.1",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
@@ -24,6 +25,7 @@
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-responsive": "^9.0.2",
     "theme-ui": "^0.15.5",
     "typescript": "5.0.2"
   },

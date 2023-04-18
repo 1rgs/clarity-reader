@@ -173,7 +173,7 @@ const OverlappingCard = ({
                     cardIndex: cardIndex + 1,
                     sectionIndex: remappedIndex,
                     sentenceIndex,
-                    scrollTo: true,
+                    scrollTo: false,
                   });
                 }}
               />
@@ -319,7 +319,7 @@ const SplitSentence = ({
 
     scrollParentIntoView();
   }, [highlightedSentenceIndex, scrollTo, scrollParentIntoView]);
-
+  const timeoutRef = useRef<number | null>(null);
   const sentenceSpans = useMemo(() => {
     return sentence_indices.flatMap(([start, end], index) => {
       const sentence = text.slice(start, end);
@@ -343,6 +343,9 @@ const SplitSentence = ({
               : {}),
           }}
           onMouseEnter={() => {
+            if (timeoutRef.current) {
+              window.clearTimeout(timeoutRef.current);
+            }
             const el = sentenceSpanRefs.current[index];
 
             if (!el) return;
@@ -353,6 +356,17 @@ const SplitSentence = ({
               setHoveredSentenceIndex(index);
               onSentenceHover(sentence, index);
             }
+          }}
+          onMouseLeave={() => {
+            if (timeoutRef.current) {
+              window.clearTimeout(timeoutRef.current);
+            }
+
+            timeoutRef.current = window.setTimeout(() => {
+              setHoveredSentenceIndex(-1);
+
+              timeoutRef.current = null;
+            }, 200);
           }}
           onClick={(e) => {
             e.stopPropagation();
