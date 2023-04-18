@@ -28,6 +28,39 @@ const Main = () => {
             height: "100%",
           }}
         >
+          {/* .photo {
+  height: 300px;
+  width: 300px;
+  background-image: linear-gradient(120deg, #e0c3fd 0%, #8ed5fc 100%);
+  border-radius: 50%;
+  background-size: cover;
+  margin-bottom: 18px;
+  transition: transform 244ms ease, opacity 244ms ease;
+  transform: scale(1);
+}
+
+.photo:hover {
+  transform: scale(1.01);
+  opacity: .8
+    <div class="photo"></div>
+} */}
+          <Box
+            sx={{
+              height: 300,
+              width: 300,
+              backgroundImage:
+                "linear-gradient(120deg, #e0c3fd 0%, #8ed5fc 100%)",
+              borderRadius: "50%",
+              backgroundSize: "cover",
+              my: 18,
+              transition: "transform 244ms ease, opacity 244ms ease",
+              transform: "scale(1)",
+              ":hover": {
+                transform: "scale(1.01)",
+                opacity: ".8",
+              },
+            }}
+          />
           <Heading as="h1" sx={{ flex: 1, display: "contents", fontSize: 60 }}>
             Clarity
           </Heading>
@@ -59,13 +92,14 @@ const Main = () => {
           >
             <Input
               type="url"
-              placeholder="Enter a URL"
+              placeholder="Try an article URL"
               variant="reader"
               sx={{
                 border: "none",
                 flex: 1,
                 borderBottom: "1px solid",
                 borderRadius: 0,
+                fontFamily: "Alice",
               }}
               value={formUrl}
               onChange={(e) => {

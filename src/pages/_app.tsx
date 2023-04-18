@@ -10,6 +10,7 @@ const theme = {
     line: "#e0e0e0",
     highlight: "rgb(255, 255, 0, 0.5)",
     mutedText: "#979797",
+    primary: "#e0c3fd",
   },
 };
 
