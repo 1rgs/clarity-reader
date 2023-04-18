@@ -2,6 +2,10 @@
 
 Clarity is a reading app that lets you explore texts in depth. Instead of reading from top to bottom, Clarity presents content in layers. Start with a summary, then tap to explore details as you like. It's a simpler way to read, giving you control over your focus.
 
+## Demo
+
+![Clarity Demo](/public/demo.gif)
+
 ## Key Features
 
 - Recursive Summarization: Begin with summaries, dive into details.

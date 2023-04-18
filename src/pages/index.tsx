@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import { Box, Button, Flex, Grid, Heading, Input, Text } from "theme-ui";
 
 export const DESCRIPTION = `An app for layered, depth-first reading — start with summaries, tap to
@@ -24,7 +25,6 @@ const Main = () => {
             alignItems: "center",
             gap: 3,
             p: 2,
-
             width: "100%",
           }}
         >
@@ -37,6 +37,7 @@ const Main = () => {
               borderRadius: "50%",
               backgroundSize: "cover",
               my: 18,
+              mt: useMediaQuery({ maxWidth: 768 }) ? 0 : 140,
               transition: "transform 244ms ease, opacity 244ms ease",
               transform: "scale(1)",
               ":hover": {
@@ -83,6 +84,7 @@ const Main = () => {
                 flex: 1,
                 borderBottom: "1px solid",
                 borderRadius: 0,
+                borderColor: "line",
                 fontFamily: "Alice",
               }}
               value={formUrl}
