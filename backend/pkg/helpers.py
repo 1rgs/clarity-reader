@@ -1,6 +1,5 @@
 from pathlib import Path
 import tiktoken
-from pydantic import BaseModel
 from typing import List, Tuple
 import openai
 import diskcache
@@ -9,7 +8,8 @@ import asyncio
 from flufl.lock import Lock
 
 
-CACHE_ROOT = Path.cwd() / ".cache"
+# CACHE_ROOT = Path.cwd() / ".cache"
+CACHE_ROOT = Path("/root/cache")
 LOCK_FILE = CACHE_ROOT / "lock"
 SUM_LOCK_FILE = CACHE_ROOT / "sum_lock"
 EMBED_CACHE_PATH = CACHE_ROOT / "embed-cache"
@@ -19,15 +19,6 @@ SUM_CACHE_PATH = CACHE_ROOT / "sum-cache"
 def count_tokens(text: str, model: str) -> int:
     encoding = tiktoken.encoding_for_model(model)
     return len(encoding.encode(text))
-
-
-class SummaryNode(BaseModel):
-    text: str
-    children: List["SummaryNode"] = []
-    sentence_indices: List[Tuple[int, int]] = []
-
-
-SummaryNode.update_forward_refs()
 
 
 semaphore = asyncio.Semaphore(5)
@@ -51,7 +42,7 @@ async def summarize_text_uncached(text: str) -> str:
                     "content": text,
                 },
             ],
-            max_tokens=4000 - count_tokens(text, "gpt-3.5-turbo") - 100,
+            max_tokens=3900 - count_tokens(text, "gpt-3.5-turbo"),
         )
         return completion.choices[0].message["content"].strip()
 
@@ -114,21 +105,6 @@ async def summarize_text(text: str) -> str:
         )
 
     return await summarize_text_cached(text)
-
-
-def split_text_into_roughly_equal_chunks_by_num_sentences(
-    text: str, num_chunks: int
-) -> List[str]:
-    sentences = sent_tokenize(text)
-    chunk_size = len(sentences) // num_chunks
-    chunks = []
-
-    for i in range(num_chunks):
-        start = i * chunk_size
-        end = start + chunk_size
-        chunks.append(" ".join(sentences[start:end]))
-
-    return chunks
 
 
 def chunks(lst, n):

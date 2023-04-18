@@ -44,4 +44,4 @@ image = (
     )
     .run_function(download_all_models)
 )
-stub = modal.Stub()
+stub = modal.Stub("clarity-reader")
