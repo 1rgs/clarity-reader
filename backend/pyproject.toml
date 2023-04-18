@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["rahulgs12 <gsr1998@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.95.0"
+nltk = "^3.8.1"
+tiktoken = "^0.3.2"
+openai = "^0.27.2"
+modal-client = "^0.48.1686"
+diskcache = "^5.4.0"
+sentence-transformers = "^2.2.2"
+flufl-lock = "^7.1.1"
+orjson = "^3.8.8"
+uvicorn = "^0.21.1"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
