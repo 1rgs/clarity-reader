@@ -7,6 +7,7 @@ export const DESCRIPTION = `An app for layered, depth-first reading — start wi
 explore details, and gain clarity on complex topics.`;
 
 const Main = () => {
+  const router = useRouter();
   const [formUrl, setFormUrl] = useState("");
   return (
     <>
@@ -64,6 +65,9 @@ const Main = () => {
           <Box
             onSubmit={(e) => {
               e.preventDefault();
+              if (formUrl) {
+                router.push(`/read/${formUrl}`);
+              }
             }}
             as="form"
             sx={{
