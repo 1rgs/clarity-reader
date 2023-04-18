@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { Box, Flex } from "theme-ui";
 import { FlattenedTree, getSimilarity } from "./getSummary";
+import { nanoid } from "nanoid";
 
 const OverlappingCard = ({
   className,
@@ -18,11 +19,11 @@ const OverlappingCard = ({
   cardIndex,
   cards,
   setHighlightedIndex,
+  highlightedRequestRef,
 }: {
   className?: string;
   onClick?: () => void;
-
-  isCardFullyVisible?: boolean;
+  highlightedRequestRef: React.MutableRefObject<string | null>;
   card: FlattenedTree[number];
   highlightedIndex: {
     cardIndex: number;
@@ -43,6 +44,51 @@ const OverlappingCard = ({
 }) => {
   const multiRef = useRef<(HTMLDivElement | null)[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const onSentenceHover = useCallback(
+    async (
+      sentence: string,
+      section_index: number,
+      children_in_next_level: number[],
+      hover: boolean
+    ) => {
+      if (cardIndex === cards.length - 1) {
+        if (hover) {
+          setHighlightedIndex({
+            cardIndex,
+            sectionIndex: section_index,
+            sentenceIndex: undefined,
+            scrollTo: false,
+          });
+        }
+        return;
+      }
+
+      const nextLevelTexts = children_in_next_level.map(
+        (childIndex) => cards[cardIndex + 1][childIndex]
+      );
+
+      const currentHighlightedIndex = nanoid();
+      highlightedRequestRef.current = currentHighlightedIndex;
+
+      const { targetIndex, sentenceIndex } = await getSimilarity(
+        sentence,
+        nextLevelTexts.map((card) => card.text)
+      );
+
+      if (currentHighlightedIndex !== highlightedRequestRef.current) return;
+
+      const remappedIndex = targetIndex + children_in_next_level[0];
+      setHighlightedIndex({
+        cardIndex: cardIndex + 1,
+        sectionIndex: remappedIndex,
+        sentenceIndex,
+        scrollTo: !hover,
+      });
+    },
+    [cardIndex, cards, highlightedRequestRef, setHighlightedIndex]
+  );
+
   return (
     <Box
       className={className}
@@ -119,63 +165,22 @@ const OverlappingCard = ({
                   highlightedIndex?.sectionIndex === section_index &&
                   highlightedIndex.scrollTo
                 }
-                onSentenceClick={async (sentence: string) => {
-                  if (cardIndex === cards.length - 1) return;
-
-                  const nextLevelTexts = children_in_next_level.map(
-                    (childIndex) => cards[cardIndex + 1][childIndex]
-                  );
-                  const { targetIndex, sentenceIndex } = await getSimilarity(
+                onSentenceClick={(sentence: string) => {
+                  onSentenceHover(
                     sentence,
-                    nextLevelTexts.map((card) => card.text)
+                    section_index,
+                    children_in_next_level,
+                    false
                   );
-                  const remappedIndex = targetIndex + children_in_next_level[0];
-                  setHighlightedIndex({
-                    cardIndex: cardIndex + 1,
-                    sectionIndex: remappedIndex,
-                    sentenceIndex,
-                    scrollTo: true,
-                  });
                 }}
-                onSentenceHover={async (sentence: string, index: number) => {
-                  if (cardIndex === cards.length - 1) {
-                    setHighlightedIndex({
-                      cardIndex,
-                      sectionIndex: section_index,
-                      sentenceIndex: undefined,
-                      scrollTo: false,
-                    });
-                  }
-
-                  const nextLevelTexts = children_in_next_level.map(
-                    (childIndex) => cards[cardIndex + 1][childIndex]
-                  );
-
-                  const currentHighlightedIndex = highlightedIndex;
-
-                  const { targetIndex, sentenceIndex } = await getSimilarity(
+                onSentenceHover={(sentence) =>
+                  onSentenceHover(
                     sentence,
-                    nextLevelTexts.map((card) => card.text)
-                  );
-
-                  if (
-                    currentHighlightedIndex &&
-                    (currentHighlightedIndex.cardIndex !==
-                      highlightedIndex?.cardIndex ||
-                      currentHighlightedIndex.sectionIndex !==
-                        highlightedIndex?.sectionIndex)
-                  ) {
-                    return;
-                  }
-
-                  const remappedIndex = targetIndex + children_in_next_level[0];
-                  setHighlightedIndex({
-                    cardIndex: cardIndex + 1,
-                    sectionIndex: remappedIndex,
-                    sentenceIndex,
-                    scrollTo: false,
-                  });
-                }}
+                    section_index,
+                    children_in_next_level,
+                    true
+                  )
+                }
               />
             </Box>
           )
@@ -211,6 +216,8 @@ export const OverlappingCards = ({ cardData }: { cardData: FlattenedTree }) => {
     sentenceIndex: number | undefined;
     scrollTo: boolean;
   } | null>(null);
+
+  const highlightedRequestRef = useRef<string | null>(null);
 
   return (
     <Box
@@ -256,6 +263,7 @@ export const OverlappingCards = ({ cardData }: { cardData: FlattenedTree }) => {
 
           return (
             <OverlappingCard
+              highlightedRequestRef={highlightedRequestRef}
               key={index}
               sx={{
                 flexShrink: 0,
@@ -342,14 +350,14 @@ const SplitSentence = ({
                 }
               : {}),
           }}
-          onMouseEnter={() => {
+          onMouseEnter={async () => {
             if (timeoutRef.current) {
               window.clearTimeout(timeoutRef.current);
             }
             const el = sentenceSpanRefs.current[index];
 
             if (!el) return;
-
+            await new Promise((resolve) => setTimeout(resolve, 120));
             const isHovered = el.matches(":hover");
 
             if (isHovered) {
