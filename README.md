@@ -24,6 +24,3 @@ Traditional reading can feel overwhelming. Clarity makes it easier to understand
 
 MIT License
 
-## Contributing
-
-Want to contribute to Clarity? Check out our contribution guidelines and join the community. Let's make reading better, together.
