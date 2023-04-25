@@ -8,6 +8,8 @@ Clarity is a reading app that lets you explore texts in depth. Instead of readin
 
 ![Clarity Demo](/public/demo.gif)
 
+### Built with [modal.com](https://modal.com)
+
 ## Key Features
 
 - Recursive Summarization: Begin with summaries, dive into details.
@@ -17,10 +19,6 @@ Clarity is a reading app that lets you explore texts in depth. Instead of readin
 ## Why Clarity?
 
 Traditional reading can feel overwhelming. Clarity makes it easier to understand complex topics and discover what matters to you. Dive deeper, read smarter.
-
-## Get Started
-
-Download Clarity and start exploring a new way to read. Your journey to knowledge just got clearer.
 
 ## License
 
