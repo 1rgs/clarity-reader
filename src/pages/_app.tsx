@@ -5,6 +5,11 @@ import { tailwind } from "@theme-ui/presets";
 import Head from "next/head";
 import { DESCRIPTION } from ".";
 import Cohere from "cohere-js";
+import posthog from "posthog-js";
+
+posthog.init("phc_7bLoFIeXazoaR7PBrj4m4X2PsH2hvNgOctI6RFrvV1n", {
+  api_host: "https://app.posthog.com",
+});
 
 const theme = {
   ...tailwind,
