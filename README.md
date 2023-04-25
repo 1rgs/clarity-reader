@@ -1,5 +1,7 @@
 # Clarity
 
+### [https://clarity.rahul.gs/](https://clarity.rahul.gs/)
+
 Clarity is a reading app that lets you explore texts in depth. Instead of reading from top to bottom, Clarity presents content in layers. Start with a summary, then tap to explore details as you like. It's a simpler way to read, giving you control over your focus.
 
 ## Demo
