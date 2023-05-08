@@ -63,7 +63,6 @@ async def summarize_flattened_text(text_chunk: SummarizeFlattenedText):
         splits = split_text_to_chunks(text_chunk.text, 30000, model)
         text = splits[0]
 
-    # chunk into tokens_per_chunk chunks
     result = [
         [
             FlattenedTreeNode(
@@ -132,7 +131,7 @@ cache_lock = Lock(str(cache_lock_file))
 @app.post("/summarize-flattened-text")
 async def summarize_flattened_text_endpoint(text_chunk: SummarizeFlattenedText):
     key = text_chunk.text + str(text_chunk.token_count)
-    # cache it here
+
     with cache_lock:
         with Cache(str(CACHE_ROOT / "summarize-flattened")) as c:
             if key in c:
@@ -174,7 +173,6 @@ async def get_similarity(similarity: Similarity) -> SimilarityResponse:
     source_embedding = embeddings[0]
     target_embeddings = embeddings[1:]
 
-    # if target_embeddings is empty, return -1
     if len(target_embeddings) == 0:
         return SimilarityResponse(targetIndex=-1, sentenceIndex=-1)
     # make it an np array
@@ -182,7 +180,6 @@ async def get_similarity(similarity: Similarity) -> SimilarityResponse:
 
     most_similar_index = np.argmax(similarities)
 
-    # Find the target index and the sentence index
     target_index = 0
     sentence_index = 0
     counter = 0
@@ -199,13 +196,13 @@ async def get_similarity(similarity: Similarity) -> SimilarityResponse:
     return SimilarityResponse(targetIndex=target_index, sentenceIndex=sentence_index)
 
 
-@stub.asgi(
+@stub.function(
     image=image,
     secret=modal.Secret.from_name("openai"),
     shared_volumes={str(CACHE_ROOT): volume},
-    # gpu="any",
     keep_warm=1,
 )
+@modal.asgi_app()
 def fastapi_stub():
     CACHE_ROOT.mkdir(exist_ok=True)
     openai.api_key = os.environ["OPENAI_API_KEY"]
