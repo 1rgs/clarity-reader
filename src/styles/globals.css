@@ -1,6 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Alice&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,500&display=swap");
-
-@import url("https://fonts.googleapis.com/css2?family=Alice&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Alice&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,500&family=Work+Sans&display=swap");
 
 :root {
   --max-width: 1100px;
@@ -30,7 +28,7 @@ body {
   color: rgb(var(--foreground-rgb));
   height: 100vh;
   background-color: white;
-  font-family: "Alice", serif;
+  font-family: "Work Sans", sans-serif;
 }
 
 a {
