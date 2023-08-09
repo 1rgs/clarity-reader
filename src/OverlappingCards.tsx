@@ -98,94 +98,86 @@ const OverlappingCard = ({
         p: 3,
         overflowY: "auto",
         transition: "opacity 0.2s",
+        lineHeight: "1.6 !important",
+        letterSpacing: "0.02em",
       }}
     >
-      <pre
-        sx={{
-          whiteSpace: "pre-wrap",
-          fontFamily: "Alice",
-        }}
-      >
-        {card.map(
-          (
-            { text, children_in_next_level, sentence_indices },
-            section_index
-          ) => (
-            <Box
-              ref={(el) => {
-                multiRef.current[section_index] = el;
-              }}
-              key={section_index}
-              sx={{
-                cursor: "pointer",
-                borderBottom: "1px dashed",
-                borderColor: "#e0e0e0",
-                p: 3,
-                color: highlightedIndex
-                  ? highlightedIndex.cardIndex === cardIndex &&
-                    highlightedIndex.sectionIndex === section_index
-                    ? "text"
-                    : highlightedIndex?.cardIndex > cardIndex
-                    ? "text"
-                    : "line"
-                  : "text",
+      {card.map(
+        ({ text, children_in_next_level, sentence_indices }, section_index) => (
+          <Box
+            ref={(el) => {
+              multiRef.current[section_index] = el;
+            }}
+            key={section_index}
+            sx={{
+              cursor: "pointer",
+              borderBottom: "1px dashed",
+              borderColor: "#e0e0e0",
+              p: 3,
+              color: highlightedIndex
+                ? highlightedIndex.cardIndex === cardIndex &&
+                  highlightedIndex.sectionIndex === section_index
+                  ? "text"
+                  : highlightedIndex?.cardIndex > cardIndex
+                  ? "text"
+                  : "line"
+                : "text",
 
-                transition: "color 0.2s",
+              transition: "color 0.2s",
+            }}
+          >
+            <SplitSentence
+              scrollParentIntoView={() => {
+                const scrollTop = multiRef.current[section_index]?.offsetTop;
+                const height = multiRef.current[section_index]?.clientHeight;
+                if (
+                  height &&
+                  scrollTop &&
+                  scrollContainerRef.current &&
+                  scrollContainerRef.current.scrollTop <= scrollTop &&
+                  scrollContainerRef.current.scrollTop +
+                    scrollContainerRef.current.clientHeight >=
+                    scrollTop + height
+                )
+                  return;
+                scrollContainerRef.current?.scrollTo({
+                  top: scrollTop,
+                  behavior: "smooth",
+                });
               }}
-            >
-              <SplitSentence
-                scrollParentIntoView={() => {
-                  const scrollTop = multiRef.current[section_index]?.offsetTop;
-                  const height = multiRef.current[section_index]?.clientHeight;
-                  if (
-                    height &&
-                    scrollTop &&
-                    scrollContainerRef.current &&
-                    scrollContainerRef.current.scrollTop <= scrollTop &&
-                    scrollContainerRef.current.scrollTop +
-                      scrollContainerRef.current.clientHeight >=
-                      scrollTop + height
-                  )
-                    return;
-                  scrollContainerRef.current?.scrollTo({
-                    top: scrollTop,
-                    behavior: "smooth",
-                  });
-                }}
-                text={text}
-                sentence_indices={sentence_indices}
-                highlightedSentenceIndex={
-                  highlightedIndex?.cardIndex === cardIndex &&
-                  highlightedIndex?.sectionIndex === section_index
-                    ? highlightedIndex?.sentenceIndex
-                    : undefined
-                }
-                scrollTo={
-                  highlightedIndex?.cardIndex === cardIndex &&
-                  highlightedIndex?.sectionIndex === section_index &&
-                  highlightedIndex.scrollTo
-                }
-                onSentenceClick={(sentence: string) => {
-                  onSentenceHover(
-                    sentence,
-                    section_index,
-                    children_in_next_level,
-                    false
-                  );
-                }}
-                onSentenceHover={(sentence) =>
-                  onSentenceHover(
-                    sentence,
-                    section_index,
-                    children_in_next_level,
-                    true
-                  )
-                }
-              />
-            </Box>
-          )
-        )}
-      </pre>
+              text={text}
+              sentence_indices={sentence_indices}
+              highlightedSentenceIndex={
+                highlightedIndex?.cardIndex === cardIndex &&
+                highlightedIndex?.sectionIndex === section_index
+                  ? highlightedIndex?.sentenceIndex
+                  : undefined
+              }
+              scrollTo={
+                highlightedIndex?.cardIndex === cardIndex &&
+                highlightedIndex?.sectionIndex === section_index &&
+                highlightedIndex.scrollTo
+              }
+              onSentenceClick={(sentence: string) => {
+                onSentenceHover(
+                  sentence,
+                  section_index,
+                  children_in_next_level,
+                  false
+                );
+              }}
+              onSentenceHover={(sentence) =>
+                onSentenceHover(
+                  sentence,
+                  section_index,
+                  children_in_next_level,
+                  true
+                )
+              }
+            />
+          </Box>
+        )
+      )}
     </Box>
   );
 };
